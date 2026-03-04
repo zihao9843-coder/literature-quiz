@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Users {
+  user_id    Int      @id @default(autoincrement())
+  username   String   @unique
+  created_at DateTime @default(now())
+  attempts   UserAttempts[]
+}
+
+model Questions {
+  question_id Int     @id @default(autoincrement())
+  题目         String
+  时期         String
+  体裁         String
+  知识点        String
+  题型         String
+  选项A        String?
+  选项B        String?
+  选项C        String?
+  选项D        String?
+  正确选项      String?
+  参考答案      String?
+  解析         String?
+  难度         String
+  attempts    UserAttempts[]
+}
+
+model KnowledgePoints {
+  kp_id        String @id
+  时期           String
+  kp_name      String
+  kp_full_name String
+  常考题型         String
+}
+
+model UserAttempts {
+  attempt_id    Int      @id @default(autoincrement())
+  user_id       Int
+  question_id   Int
+  chosen_answer String?
+  is_correct    Boolean
+  attempted_at  DateTime @default(now())
+
+  user     Users     @relation(fields: [user_id], references: [user_id])
+  question Questions @relation(fields: [question_id], references: [question_id])
+}
